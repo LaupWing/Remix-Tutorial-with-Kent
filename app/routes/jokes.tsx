@@ -10,10 +10,14 @@ export const links: LinksFunction = () => {
 }
 
 type LoaderData = {
-   jokes: Array<Joke>
+   jokes: Array<Pick<Joke, "id" | "name">>
 }
 export const loader: LoaderFunction = async () => {
-   const jokes = await db.joke.findMany()
+   const jokes = await db.joke.findMany({
+      take: 5,
+      select: { id: true, name: true },
+      orderBy: { createdAt: "desc" },
+   })
    const data:LoaderData = {
       jokes
    }
