@@ -10,7 +10,7 @@ export const action: ActionFunction = async ({ request }) => {
       typeof name !== "string" ||
       typeof content !== "string"
    ){
-      throw new Error(`Form not submitted correctly`)
+      throw new Error("Form not submitted correctly")
    }
 
    const joke = await db.joke.create({
