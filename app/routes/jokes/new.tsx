@@ -1,4 +1,5 @@
 import { ActionFunction, redirect } from "@remix-run/node"
+import { useActionData } from "react-router"
 import { db } from "~/utils/db.server"
 
 function validateJokeName(name: string){
@@ -23,7 +24,28 @@ export const action: ActionFunction = async ({ request }) => {
       typeof name !== "string" ||
       typeof content !== "string"
    ){
-      throw new Error("Form not submitted correctly")
+      return {
+         formError: "Form submitted incorrectly",
+         fields: {
+            name, 
+            content
+         }
+      }
+   }
+
+   const fieldErrors = {
+      name: validateJokeName(name),
+      content: validateJokeContent(content)
+   }
+
+   if(Object.entries(fieldErrors).some(Boolean)){
+      return {
+         fieldErrors,
+         fields: {
+            name, 
+            content
+         }
+      }
    }
 
    const joke = await db.joke.create({
@@ -37,6 +59,8 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function NewJokeRoute() {
+   const actionData = useActionData()
+
    return (
       <div>
          <p>Add your own hilarious joke</p>
