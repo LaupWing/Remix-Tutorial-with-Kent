@@ -5,18 +5,6 @@ import { Outlet, Link, useLoaderData } from "@remix-run/react"
 import stylesUrl from "~/styles/jokes.css"
 import { db } from "~/utils/db.server"
 
-function validateJokeName(name: string){
-   if(name.length < 3){
-      return "Joke must be at least 3 characters long"
-   }
-}
-
-function validateJokeContent(content: string){
-   if(content.length < 3){
-      return "Content must be at least 10 characters long"
-   }
-}
-
 export const links: LinksFunction = () => {
    return [{ rel: "stylesheet", href: stylesUrl }]
 }

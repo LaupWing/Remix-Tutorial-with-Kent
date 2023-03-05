@@ -1,6 +1,19 @@
 import { ActionFunction, redirect } from "@remix-run/node"
 import { db } from "~/utils/db.server"
 
+function validateJokeName(name: string){
+   if(name.length < 3){
+      return "Joke must be at least 3 characters long"
+   }
+}
+
+function validateJokeContent(content: string){
+   if(content.length < 3){
+      return "Content must be at least 10 characters long"
+   }
+}
+
+
 export const action: ActionFunction = async ({ request }) => {
    const form = await request.formData()
    const name = form.get("name")
