@@ -1,3 +1,17 @@
+import { ActionFunction, redirect } from "@remix-run/node"
+import { db } from "~/utils/db.server"
+
+export const action: ActionFunction = async () => {
+   const joke = await db.joke.create({
+      data: {
+         name,
+         content
+      }
+   })
+
+   return redirect(`/jokes/${joke.id}`)
+}
+
 export default function NewJokeRoute() {
    return (
       <div>
