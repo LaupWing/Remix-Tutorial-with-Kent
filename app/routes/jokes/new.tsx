@@ -20,7 +20,7 @@ function validateJokeName(name: string) {
 
 export const action = async ({ request }: ActionArgs) => {
    const form = await request.formData()
-   const user = await requireUserId(request)
+   const userId = await requireUserId(request)
    const name = form.get("name")
    const content = form.get("content")
    if (typeof name !== "string" || typeof content !== "string") {
@@ -47,7 +47,7 @@ export const action = async ({ request }: ActionArgs) => {
    const joke = await db.joke.create({ 
       data: {
          ...fields, 
-         jokesterId: user!.id
+         jokesterId: userId
       } 
    })
    return redirect(`/jokes/${joke.id}`)
