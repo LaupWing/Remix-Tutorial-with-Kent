@@ -1,6 +1,6 @@
 import type { ActionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
-import { useActionData } from "@remix-run/react"
+import { useActionData, useParams } from "@remix-run/react"
 
 import { db } from "~/utils/db.server"
 import { badRequest } from "~/utils/request.server"
@@ -44,11 +44,11 @@ export const action = async ({ request }: ActionArgs) => {
       })
    }
 
-   const joke = await db.joke.create({ 
+   const joke = await db.joke.create({
       data: {
-         ...fields, 
-         jokesterId: userId
-      } 
+         ...fields,
+         jokesterId: userId,
+      },
    })
    return redirect(`/jokes/${joke.id}`)
 }
@@ -123,5 +123,12 @@ export default function NewJokeRoute() {
             </div>
          </form>
       </div>
+   )
+}
+
+export function ErrorBoundary() {
+   const { jokeId } = useParams()
+   return (
+      <div className="error-container">{`There was an error loading joke by the id ${jokeId}. Sorry.`}</div>
    )
 }
