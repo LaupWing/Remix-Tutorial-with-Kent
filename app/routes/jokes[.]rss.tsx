@@ -32,34 +32,34 @@ export const loader = async ({ request }: LoaderArgs) => {
    const jokesUrl = `${domain}/jokes`
 
    const rssString = `
-    <rss xmlns:blogChannel="${jokesUrl}" version="2.0">
-      <channel>
-        <title>Remix Jokes</title>
-        <link>${jokesUrl}</link>
-        <description>Some funny jokes</description>
-        <language>en-us</language>
-        <generator>Kody the Koala</generator>
-        <ttl>40</ttl>
-        ${jokes
-           .map((joke) =>
-              `
-            <item>
-              <title><![CDATA[${escapeCdata(joke.name)}]]></title>
-              <description><![CDATA[A funny joke called ${escapeHtml(
-                 joke.name
-              )}]]></description>
-              <author><![CDATA[${escapeCdata(
-                 joke.jokester.username
-              )}]]></author>
-              <pubDate>${joke.createdAt.toUTCString()}</pubDate>
-              <link>${jokesUrl}/${joke.id}</link>
-              <guid>${jokesUrl}/${joke.id}</guid>
-            </item>
-          `.trim()
-           )
-           .join("\n")}
-      </channel>
-    </rss>
+      <rss xmlns:blogChannel="${jokesUrl}" version="2.0">
+         <channel>
+         <title>Remix Jokes</title>
+         <link>${jokesUrl}</link>
+         <description>Some funny jokes</description>
+         <language>en-us</language>
+         <generator>Kody the Koala</generator>
+         <ttl>40</ttl>
+         ${jokes
+            .map((joke) =>
+               `
+               <item>
+               <title><![CDATA[${escapeCdata(joke.name)}]]></title>
+               <description><![CDATA[A funny joke called ${escapeHtml(
+                  joke.name
+               )}]]></description>
+               <author><![CDATA[${escapeCdata(
+                  joke.jokester.username
+               )}]]></author>
+               <pubDate>${joke.createdAt.toUTCString()}</pubDate>
+               <link>${jokesUrl}/${joke.id}</link>
+               <guid>${jokesUrl}/${joke.id}</guid>
+               </item>
+            `.trim()
+            )
+            .join("\n")}
+         </channel>
+      </rss>
   `.trim()
 
    return new Response(rssString, {
