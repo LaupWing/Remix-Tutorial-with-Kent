@@ -1,11 +1,16 @@
-import type { ActionArgs, LinksFunction } from "@remix-run/node"
+import type { ActionArgs, LinksFunction, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Link, useActionData, useSearchParams } from "@remix-run/react"
 
 import stylesUrl from "~/styles/login.css"
 import { db } from "~/utils/db.server"
 import { badRequest } from "~/utils/request.server"
-import { login, createUserSession, register } from "~/utils/session.server"
+import { createUserSession, login, register } from "~/utils/session.server"
+
+export const meta: MetaFunction = () => ({
+   description: "Login to submit your own jokes to Remix Jokes!",
+   title: "Remix Jokes | Login",
+})
 
 export const links: LinksFunction = () => [
    { rel: "stylesheet", href: stylesUrl },
@@ -36,9 +41,7 @@ export const action = async ({ request }: ActionArgs) => {
    const loginType = form.get("loginType")
    const username = form.get("username")
    const password = form.get("password")
-   const redirectTo = validateUrl(
-      (form.get("redirectTo") as string) || "/jokes"
-   )
+   const redirectTo = validateUrl(form.get("redirectTo") as string || "/jokes")
    if (
       typeof loginType !== "string" ||
       typeof username !== "string" ||
@@ -88,8 +91,14 @@ export const action = async ({ request }: ActionArgs) => {
                formError: `User with username ${username} already exists`,
             })
          }
-         const user = await register({username, password})
-         
+         const user = await register({ username, password })
+         if (!user) {
+            return badRequest({
+               fieldErrors: null,
+               fields,
+               formError: `Something went wrong trying to create a new user.`,
+            })
+         }
          return createUserSession(user.id, redirectTo)
       }
       default: {
